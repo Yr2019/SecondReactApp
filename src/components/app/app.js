@@ -1,12 +1,26 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Col, Row, Container} from 'reactstrap';
 import Header from '../header';
 import RandomChar from '../randomChar';
 import ItemList from '../itemList';
 import CharDetails from '../charDetails';
+import { Button } from 'reactstrap';
 
-
-const App = () => {
+export default class App extends Component {
+    constructor(props) {
+        super();
+        this.state = {
+            showMe: false,
+        }
+    }
+    
+    operation(){
+      this.setState({
+        showMe: !this.state.showMe
+      })
+    }
+    
+    render() {
     return (
         <> 
             <Container>
@@ -15,7 +29,8 @@ const App = () => {
             <Container>
                 <Row>
                     <Col lg={{size: 5, offset: 0}}>
-                        <RandomChar/>
+                        {this.state.showMe ? <RandomChar/> :null}
+                        <Button color="secondary" onClick={()=>this.operation()}>Random Character</Button>
                     </Col>
                 </Row>
                 <Row>
@@ -28,7 +43,8 @@ const App = () => {
                 </Row>
             </Container>
         </>
-    );
-};
+    )
+}
+}
 
-export default App;
+

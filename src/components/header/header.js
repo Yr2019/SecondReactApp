@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import GotHouse from '../../services/gotHouse';
-import GotCharacters from '../../services/gotService';
-import GotBooks from '../../services/gotBook';
+import GotService from '../../services/gotService';
 
 
 
@@ -67,13 +65,13 @@ const Header = () => {
             </HeaderTitle>
             <HeaderLinks>
                 <li>
-                    <a href="characters" onClick={(e) => handleClick2(e, GotCharacters)}>Characters</a>
+                    <a href="characters" onClick={(e) => handleClick2(e, GotService)}>Characters</a>
                 </li>
                 <li>
-                    <a href="houseInfo" onClick={(e) => handleClick(e, GotHouse)}>Houses</a>
+                    <a href="houseInfo" onClick={(e) => handleClick(e, GotService)}>Houses</a>
                 </li>
                 <li>
-                    <a href="books" onClick={(e) => handleClick3(e, GotBooks)}>Books</a>   
+                    <a href="books" onClick={(e) => handleClick3(e, GotService)}>Books</a>   
                 </li>
             </HeaderLinks>
         </HeaderBlock>
