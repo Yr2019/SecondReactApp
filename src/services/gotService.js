@@ -1,3 +1,4 @@
+
 export default class GotService {
   constructor() {
     this._apiBase = 'https://www.anapioficeandfire.com/api';
@@ -13,7 +14,7 @@ export default class GotService {
     const res = await this.getResource('/characters?page=5&pageSize=10');
     return res.map(this._transformCharacter);
   }
-  async getCharacters(id) {
+  async getCharacter(id) {
     const character = await this.getResource(`/characters/${id}`);
     return this._transformCharacter(character);
   }
@@ -21,7 +22,7 @@ export default class GotService {
     const houses = await this.getResource('/houses/');
     return houses.map(this._transformHouse);
   }
-  async getHouses(id) {
+  async getHouse(id) {
     const house = await this.getResource(`/houses/${id}`);
     return this._tracnformHouse(house);
   }
@@ -29,7 +30,7 @@ export default class GotService {
     const books = await this.getResource('/books/');
     return books.map(this._transformBook);
   }
-  async getBooks(id) {
+  async getBook(id) {
     const book = await this.getResource(`/books/${id}`);
     return this._transformBook(book);
   }
@@ -40,7 +41,8 @@ export default class GotService {
       gender: char.gender,
       born: char.born,
       died: char.died,
-      culture: char.culture
+      culture: char.culture,
+      url: char.url
     }
   }
   _transformHouse(house) {

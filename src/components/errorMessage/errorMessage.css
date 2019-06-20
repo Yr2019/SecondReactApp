@@ -1,4 +1,10 @@
 .random-block img {
   max-width: 400px;
   width: 100%;
+  
+}
+
+.random-block span {
+  font-size: 30px;
+  color: green;
 }
