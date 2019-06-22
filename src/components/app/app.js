@@ -4,10 +4,12 @@ import Header from '../header';
 import RandomChar from '../randomChar';
 import { Button } from 'reactstrap';
 import ErrorMessage from '../errorMessage/';
-import CharacterPage from '../characterPage/';
-
-
+import CharacterPage from '../pages/characterPage';
+import GotService from '../../services/gotService';
+import BookPage from '../pages/bookPage';
+import HousePage from '../pages/housePage';
 export default class App extends Component {
+    gotService = new GotService();
     state = {
         showRandomChar: true,
         error: false
@@ -48,7 +50,33 @@ export default class App extends Component {
                   {char}  
               </Col>
             </Row>
-            <CharacterPage/>
+              <CharacterPage/>
+              <BookPage/>
+              <HousePage/>
+            {/* <Row>
+              <Col md='6'>
+                  <ItemList 
+                    onItemSelected={this.onItemSelected}
+                    getData={this.gotService.getAllBooks}
+                    renderItem={(item) => (
+                    <><span>{item.name}</span>
+                    <button>Click Me</button></>)}/>
+              </Col>
+              <Col md='6'>
+                  <CharDetails charId={this.state.selectedChar}/>
+              </Col>
+            </Row>
+            <Row>
+              <Col md='6'>
+                  <ItemList 
+                    onItemSelected={this.onItemSelected}
+                    getData={this.gotService.getAllHouses}
+                    renderItem={(item) => item.name}/>
+              </Col>
+              <Col md='6'>
+                  <CharDetails charId={this.state.selectedChar}/>
+              </Col>
+            </Row> */}
         </Container>
       </>
     )

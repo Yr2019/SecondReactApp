@@ -1,10 +1,18 @@
 import React, {Component} from 'react';
 // import './charDetails.css';
 import styled from 'styled-components';
-import GotService from '../../services/gotService';
 import Spinner from '../spinner';
 
+const Field = ({itemInfo, field, label}) => {
+    return (
+        <li className="list-group-item d-flex justify-content-between">
+            <span className="term">{label}</span>
+            <span>{itemInfo[field]}</span>
+        </li>
+    )
+}
 
+export {Field};
 const CharDetailsBlock = styled.div`
     background-color: #fff;
     padding: 25px 25px 15px 25px;
@@ -24,9 +32,8 @@ const SelectError = styled.span`
 
 
 export default class CharDetails extends Component {
-    gotService = new GotService();
     state = {
-        char: null
+        itemInfo: null
     }
     
     componentDidMount(){
@@ -39,19 +46,25 @@ export default class CharDetails extends Component {
         }
     }
     updateChar() {
-        const {charId} = this.props;
+        const {charId, getDataInfo} = this.props;
         if (!charId) {
             return;
         }
-        this.gotService.getCharacter(charId)
-            .then((char) => {
-                this.setState({char})
+        //console.log(this.props);
+        // console.log(getDataInfo);
+        getDataInfo(charId)
+            .then((itemInfo) => {
+                this.setState({itemInfo})
             })
+        // this.gotService.getHouse(charId)
+        //     .then((itemInfo) => {
+        //         this.setState({itemInfo})
+        //     })
        //this.foo.bar = 0;
     }
     render() {
 
-        if(!this.state.char) {
+        if(!this.state.itemInfo) {
             return (
                 <>
                     <SelectError>Please select a character</SelectError>
@@ -59,28 +72,17 @@ export default class CharDetails extends Component {
                 </>
             )
         }
-
-        const {name, gender, born, died, culture} = this.state.char;
+        const {itemInfo} = this.state;
+        const {name} = itemInfo;
         return (
             <CharDetailsBlock>
                 <CharDetailsTitle>{name}</CharDetailsTitle>
                 <ul className="list-group list-group-flush">
-                    <li className="list-group-item d-flex justify-content-between">
-                        <span className="term">Gender</span>
-                        <span>{gender}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                        <span className="term">Born</span>
-                        <span>{born}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                        <span className="term">Died</span>
-                        <span>{died}</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between">
-                        <span className="term">Culture</span>
-                        <span>{culture}</span>
-                    </li>
+                    {
+                        React.Children.map(this.props.children, (child) => {
+                            return React.cloneElement(child, {itemInfo})
+                        })
+                    }
                 </ul>
             </CharDetailsBlock>
         );
