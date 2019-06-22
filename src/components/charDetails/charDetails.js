@@ -50,8 +50,6 @@ export default class CharDetails extends Component {
         if (!charId) {
             return;
         }
-        //console.log(this.props);
-        // console.log(getDataInfo);
         getDataInfo(charId)
             .then((itemInfo) => {
                 this.setState({itemInfo})
