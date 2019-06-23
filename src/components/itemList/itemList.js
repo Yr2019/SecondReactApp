@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 // import './itemList.css';
 import styled from 'styled-components';
 import Spinner from '../spinner';
+import ErrorMessage from "../errorMessage/errorMessage";
 // const shortid = require('shortid');
 
 // console.log(shortid.generate());
@@ -19,7 +20,15 @@ const ListGroup = styled(ItemListMain)`
 
 export default class ItemList extends Component {
     state = {
-        itemList: null
+        itemList: null,
+        error: false,
+        loaded: true
+    }
+    componentDidCatch(error, errorInfo) {
+      this.setState({
+        error: "critical error",
+        loaded: false
+      })
     }
 
     componentDidMount(){
@@ -27,12 +36,18 @@ export default class ItemList extends Component {
         getData()
             .then((itemList) => {
                 this.setState({
-                    itemList
+                    itemList,
+                    loaded: false
                 })
+            })
+            .catch(err => {
+              this.setState({
+                loaded: false,
+                error: "critical error"
+              })
             });
-    }
-
-    renderItems(arr) {   
+  }
+    renderItems(arr) {  
         return arr.map((item) => {
             // const key = arr[i].name + [arr[i].gender + arr[i].born]+ i;
             // const keys = key.toLowerCase().replace(/\s/g, '');
@@ -42,18 +57,22 @@ export default class ItemList extends Component {
             const label = this.props.renderItem(item);
             //console.log("renderItems " + item.id);
             return (
+              <ListGroup>
                 <li 
                     key={id}
                     className="list-group-item"
                     onClick={() => this.props.onItemSelected(id)}>
                     {label}
                 </li>
+              </ListGroup>
             )
         })
     }
     render() {
-        const {itemList} = this.state;
-
+        const {itemList, error} = this.state;
+        if(error) {
+          return <ErrorMessage err={error}/>
+        }
         if (!itemList) {
             return <Spinner/>
         }
@@ -61,9 +80,11 @@ export default class ItemList extends Component {
         const items = this.renderItems(itemList);
 
         return (
-            <ListGroup>
+            <ItemListMain>
+              <ListGroup>
                 {items}
-            </ListGroup>
+              </ListGroup>
+            </ItemListMain>
         );
     }
 }
