@@ -1,29 +1,66 @@
 import React, {Component} from 'react';
-// import './itemList.css';
+import {ListGroup, ListGroupItem} from 'reactstrap';
 import styled from 'styled-components';
-import Spinner from '../spinner';
+
+import Spinner from "../spinner/spinner";
 import ErrorMessage from "../errorMessage/errorMessage";
-// const shortid = require('shortid');
+import PropTypes from "prop-types";
 
-// console.log(shortid.generate());
-
-const ItemListMain = styled.ul`
+const ItemListWrapper = styled.div`
+  margin-bottom: 30px;
+  li {
     cursor: pointer;
-    .li {
-        cursor: pointer; 
-    }
+  }
 `;
 
-const ListGroup = styled(ItemListMain)`
-    
-`;
+class ItemList extends Component {
+  renderItems = (arr) => {
+    return arr.map((item) => {
+      const {id} = item;
+      const label = this.props.renderItem(item);
+      return (
+        <ListGroupItem
+          key={id}
+          onClick={() => {
+            this.props.onItemSelected(id)
+          }}>
+          {label}
+        </ListGroupItem>
+      )
+    })
+  }
 
-export default class ItemList extends Component {
+  render() {
+    const {data} = this.props;
+
+    const items = this.renderItems(data);
+    return (
+      <ItemListWrapper>
+        <ListGroup className="item-list list-group">
+          {items}
+        </ListGroup>
+      </ItemListWrapper>
+    );
+  }
+}
+
+const whithData = (View) => {
+  return class extends Component {
     state = {
-        itemList: null,
-        error: false,
-        loaded: true
+      data: null,
+      error: false,
+      loaded: true
     }
+
+    static defaultProps = {
+      onItemSelected: () => {
+      }
+    }
+
+    static propTypes = {
+      onItemSelected: PropTypes.func
+    }
+
     componentDidCatch(error, errorInfo) {
       this.setState({
         error: "critical error",
@@ -31,60 +68,38 @@ export default class ItemList extends Component {
       })
     }
 
-    componentDidMount(){
-        const {getData} = this.props;
-        getData()
-            .then((itemList) => {
-                this.setState({
-                    itemList,
-                    loaded: false
-                })
-            })
-            .catch(err => {
-              this.setState({
-                loaded: false,
-                error: "critical error"
-              })
-            });
-  }
-    renderItems(arr) {  
-        return arr.map((item) => {
-            // const key = arr[i].name + [arr[i].gender + arr[i].born]+ i;
-            // const keys = key.toLowerCase().replace(/\s/g, '');
-            // const numbers = [];
-            // numbers[i] = arr[i].url.match(/\d+/g).map(Number);
-            const {id} = item;
-            const label = this.props.renderItem(item);
-            //console.log("renderItems " + item.id);
-            return (
-              <ListGroup>
-                <li 
-                    key={id}
-                    className="list-group-item"
-                    onClick={() => this.props.onItemSelected(id)}>
-                    {label}
-                </li>
-              </ListGroup>
-            )
+    componentDidMount() {
+      const {getData} = this.props;
+
+      getData()
+        .then((data) => {
+          this.setState({
+            data,
+            loaded: false
+          })
+        })
+        .catch(err => {
+          this.setState({
+            loaded: false,
+            error: "critical error"
+          })
         })
     }
+
     render() {
-        const {itemList, error} = this.state;
-        if(error) {
-          return <ErrorMessage err={error}/>
-        }
-        if (!itemList) {
-            return <Spinner/>
-        }
+      const {data, error} = this.state;
 
-        const items = this.renderItems(itemList);
-
-        return (
-            <ItemListMain>
-              <ListGroup>
-                {items}
-              </ListGroup>
-            </ItemListMain>
-        );
+      if (error) {
+        return <ErrorMessage err={error}/>
+      }
+      if (!data) {
+        return <Spinner/>
+      }
+      return (
+        <View {...this.props} data={data}/>
+      )
     }
+  }
 }
+
+export default whithData(ItemList);

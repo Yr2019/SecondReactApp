@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import ItemList from '../../itemList';
-import CharDetails, { Field } from '../../charDetails';
-import ErrorMessage from '../../errorMessage';
-import gotService from '../../../services/gotService';
-import RowBlock from '../../rowBlock';
+import ItemList from '../itemList';
+import CharDetails, { Field } from '../charDetails';
+import ErrorMessage from '../errorMessage';
+import gotService from '../../services/gotService';
+import RowBlock from '../rowBlock';
 export default class HousePage extends Component {
   gotService = new gotService();
 
   state = {
-    selectedHouse: 11,
+    selectedHouse: null,
     error: false
   }
 
@@ -37,8 +37,9 @@ export default class HousePage extends Component {
     )
 
     const charDetails = (
-      <CharDetails charId={this.state.selectedHouse}
-      getDataInfo={this.gotService.getHouse}>
+      <CharDetails 
+      itemId={this.state.selectedHouse}
+      getData={this.gotService.getHouse}>
         <Field field='name' label='Name' />
         <Field field='region' label='Region' />
         <Field field='words' label='Words' />

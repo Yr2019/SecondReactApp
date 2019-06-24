@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import GotService from '../../services/gotService';
-
+import {Link} from 'react-router-dom';
 
 
 const HeaderBlock = styled.div`
@@ -34,44 +33,22 @@ const HeaderLinks = styled.ul`
 
 
 const Header = () => {
-    
-    function handleClick(e, elem) {
-        e.preventDefault();
-        console.log('All Houses : ');
-            const  newArray = new elem();
-                newArray.getAllHouses()
-                .then(res => console.log(res));
-    }
-    function handleClick2(e, elem) {
-        e.preventDefault();
-        console.log('All Characters : ');
-        const newArray = new elem();
-        newArray.getAllCharacters()
-            .then(res => console.log(res));
-    }
-    function handleClick3(e, elem) {
-        e.preventDefault();
-        console.log('All Books : ');
-        const newArray = new elem();
-        newArray.getAllBooks()
-            .then(res => console.log(res));
-    }
     return (
         <HeaderBlock>
             <HeaderTitle>
-                <a href="{}"> 
+                <Link to='/'> 
                 Game of Thrones DB
-                </a>
+                </Link>
             </HeaderTitle>
             <HeaderLinks>
                 <li>
-                    <a href="characters" onClick={(e) => handleClick2(e, GotService)}>Characters</a>
+                    <Link to='/characters'>Characters</Link>
                 </li>
                 <li>
-                    <a href="houseInfo" onClick={(e) => handleClick(e, GotService)}>Houses</a>
+                    <Link to='/houses'>Houses</Link>
                 </li>
                 <li>
-                    <a href="books" onClick={(e) => handleClick3(e, GotService)}>Books</a>   
+                    <Link to='/books'>Books</Link>   
                 </li>
             </HeaderLinks>
         </HeaderBlock>

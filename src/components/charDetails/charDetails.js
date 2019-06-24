@@ -41,20 +41,20 @@ export default class CharDetails extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.charId !== prevProps.charId) {
+        if (this.props.itemId !== prevProps.itemId) {
             this.updateChar();
         }
     }
     updateChar() {
-        const {charId, getDataInfo} = this.props;
-        if (!charId) {
+        const {itemId, getData} = this.props;
+        if (!itemId) {
             return;
         }
-        getDataInfo(charId)
+        getData(itemId)
             .then((itemInfo) => {
                 this.setState({itemInfo})
             })
-        // this.gotService.getHouse(charId)
+        // this.gotService.getHouse(itemId)
         //     .then((itemInfo) => {
         //         this.setState({itemInfo})
         //     })

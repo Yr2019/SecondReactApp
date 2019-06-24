@@ -1,77 +1,110 @@
 import React, {Component} from 'react';
-import {ListGroup, ListGroupItem} from 'reactstrap';
+// import './itemList.css';
 import styled from 'styled-components';
-
-import gotService from '../../services/gotService';
-import Spinner from "../spinner/spinner";
+import Spinner from '../spinner';
 import ErrorMessage from "../errorMessage/errorMessage";
+import PropTypes from 'prop-types';
+// const shortid = require('shortid');
 
-const ItemListWrapper = styled.div`
-  li {
+// console.log(shortid.generate());
+
+const ItemListMain = styled.ul`
     cursor: pointer;
-  }
+    .li {
+        cursor: pointer; 
+    }
 `;
 
-export default class ItemList extends Component {
-  gotService = new gotService();
-  state = {
-    charList: null,
-    error: false,
-    loaded: true
-  }
+const ListGroup = styled(ItemListMain)`
+    
+`;
 
-  componentDidCatch(error, errorInfo) {
-    this.setState({
-      error: "critical error",
-      loaded: false
-    })
-  }
-
-  componentDidMount() {
-    this.gotService.getAllCharacters()
-      .then((charList) => {
-        this.setState({
-          charList,
-          loaded: false
+class ItemList extends Component {
+    renderItems(arr) {  
+        return arr.map((item) => {
+            // const key = arr[i].name + [arr[i].gender + arr[i].born]+ i;
+            // const keys = key.toLowerCase().replace(/\s/g, '');
+            // const numbers = [];
+            // numbers[i] = arr[i].url.match(/\d+/g).map(Number);
+            const shortid = require('shortid');
+            const {id} = item;
+            const label = this.props.renderItem(item);
+    
+            return (
+              <ListGroup>
+                <li 
+                    key={shortid.generate()}
+                    className="list-group-item"
+                    onClick={() => this.props.onItemSelected(id)}>
+                    {label}
+                </li>
+              </ListGroup>
+            )
         })
+    }
+    render() {
+        
+        const {data} = this.props;
+        const items = this.renderItems(data);
+
+        return (
+            <ItemListMain>
+              <ListGroup>
+                {items}
+              </ListGroup>
+            </ItemListMain>
+        );
+    }
+}
+
+const withData = (View) => {
+  return class extends Component {
+    state = {
+      data: null,
+      error: false,
+      loaded: true
+    }
+    static defaultProps = {
+      onItemSelected: () => {},
+    }
+    static propsTypes = {
+      onItemSelected: PropTypes.func,
+      getData: PropTypes.arrayOf(PropTypes.object)
+    }
+    componentDidCatch(error, errorInfo) {
+      this.setState({
+        error: "critical error",
+        loaded: false
       })
-      .catch(err => {
-        this.setState({
-          loaded: false,
-          error: "critical error"
+    }
+
+    componentDidMount() {
+      const {getData}  = this.props;
+      getData()
+        .then((data) => {
+          this.setState({
+            data,
+            loaded: false
+          })
         })
-      })
-  }
-
-  renderItems = (arr) => {
-    return arr.map((item) => {
-      return (
-        <ListGroupItem
-          key={item.id}
-          onClick={() => {this.props.onItemSelected(item.id)}}>
-          {item.name}
-        </ListGroupItem>
-      )
-    })
-  }
-
-  render() {
-    const {charList, error} = this.state;
-
-    if(error) {
-      return <ErrorMessage err={error}/>
+        .catch(err => {
+          this.setState({
+            loaded: false,
+            error: "critical error"
+          })
+        });
     }
-    if(!charList) {
-      return <Spinner />
+    render () {
+      const {data, error} = this.state;
+        if(error) {
+          return <ErrorMessage err={error}/>
+        }
+        if (!data) {
+            return <Spinner/>
+        }
+      return <View {...this.props} data={data} />
     }
+  }
+}
 
-    const items = this.renderItems(charList);
-    return (
-      <ItemListWrapper>
-        <ListGroup className="item-list list-group">
-          {items}
-        </ListGroup>
-      </ItemListWrapper>
-    );
-}
-}
+export default withData(ItemList);
