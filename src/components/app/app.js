@@ -5,7 +5,7 @@ import RandomChar from '../randomChar';
 import { Button } from 'reactstrap';
 import ErrorMessage from '../errorMessage/';
 import GotService from '../../services/gotService';
-import {CharacterPage, BookPage, HousePage} from '../pages';
+import {CharacterPage, BookPage, HousePage, BooksItem} from '../pages';
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 export default class App extends Component {
@@ -55,9 +55,15 @@ export default class App extends Component {
                 <Route path='/characters' component={CharacterPage}/>
                 <Route path='/houses' component={HousePage}/>
                 <Route path='/books' exact component={BookPage}/>
-                {/* <Route path='/book/:id' render={
-                  () => <BooksItem/>
-                }/> */}
+                <Route path='/books/:id' render={
+                  ({match}) => {
+                    //console.log(match);
+                    // console.log(location);
+                    // console.log(history);
+                    const {id} = match.params;
+                    return <BooksItem bookId={id}/>
+                  }
+                }/>
               {/* <Row>
                 <Col md='6'>
                     <ItemList 
